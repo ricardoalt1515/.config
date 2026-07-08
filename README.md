@@ -42,7 +42,11 @@ Configs include:
 - Git preferences
 - Lazygit config
 - AeroSpace config
-- OpenCode/Pi/Gentle AI config
+- OpenCode/Gentle AI config
+- Claude Code agents, commands, status line, MCP definitions, theme, and safe settings
+- Pi agents, chains, extensions, settings, themes, MCP definitions, and shared skills
+- Shared `~/.agents/skills` used by Pi and other agent harnesses
+- Conservative macOS developer preferences from `macos/defaults.sh`
 - Other tracked files under `~/.config`
 
 ## What stays manual
@@ -54,6 +58,8 @@ These should not be committed or blindly restored:
 - 1Password/session state
 - Raycast account login
 - Atuin login/sync
+- Claude Code login/history/cache/telemetry
+- Pi auth/session/trust/cache/MCP OAuth state
 - Copilot or other OAuth tokens
 
 After restoring, run the relevant manual steps:
@@ -62,7 +68,7 @@ After restoring, run the relevant manual steps:
 gh auth login
 ```
 
-Then sign in to Raycast, Atuin, and any app that stores credentials locally.
+Then sign in to Raycast, Atuin, Claude Code, Pi providers, Copilot, and any app that stores credentials locally.
 
 ## Packages
 

@@ -12,6 +12,37 @@ goose/
 gga/
 .windsurf/
 
+# Runtime state inside portable agent config snapshots
+claude/backups/
+claude/cache/
+claude/daemon/
+claude/daemon.log
+claude/debug/
+claude/downloads/
+claude/file-history/
+claude/history.jsonl
+claude/jobs/
+claude/paste-cache/
+claude/projects/
+claude/session-env/
+claude/sessions/
+claude/telemetry/
+claude/tasks/
+claude/*cache*.json
+claude/.last-*
+pi-agent/auth.json
+pi-agent/intercom/
+pi-agent/mcp-cache.json
+pi-agent/mcp-npx-cache.json
+pi-agent/mcp-oauth/
+pi-agent/npm/
+pi-agent/pi-pretty/**/*.mdb
+pi-agent/sessions/
+pi-agent/trust.json
+pi-agent/**/*.log
+agents/skills/**/.venv/
+agents/skills/**/node_modules/
+
 # Secrets and auth state
 # GitHub Copilot local app state contains oauth_token — never commit.
 github-copilot/

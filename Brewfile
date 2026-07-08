@@ -57,7 +57,8 @@ cask "font-iosevka-nerd-font"
 cask "font-meslo-lg-nerd-font"
 cask "font-go-mono-nerd-font"
 
-# Global npm tools for Pi/Gentle AI workflow
+# Global npm tools for AI/dev workflow
+npm "@anthropic-ai/claude-code"
 npm "@earendil-works/pi-coding-agent"
 npm "@github/copilot"
 npm "gentle-engram"

@@ -51,7 +51,7 @@ backup_path() {
 	fi
 }
 
-link_file() {
+link_path() {
 	local source="$1"
 	local target="$2"
 
@@ -59,6 +59,14 @@ link_file() {
 	backup_path "$target"
 	ln -sfn "$source" "$target"
 	info "Linked $target"
+}
+
+link_file() {
+	link_path "$1" "$2"
+}
+
+link_dir() {
+	link_path "$1" "$2"
 }
 
 info "Restoring dotfiles from $DOTFILES_DIR"
@@ -72,6 +80,30 @@ fi
 
 # Home-level files that are commonly read from ~/ instead of ~/.config.
 [[ -f "$DOTFILES_DIR/zsh/.zshrc" ]] && link_file "$DOTFILES_DIR/zsh/.zshrc" "$HOME/.zshrc"
+
+# Claude Code portable config. Runtime history, caches, auth, and telemetry stay local.
+if [[ -d "$DOTFILES_DIR/claude" ]]; then
+	mkdir -p "$HOME/.claude"
+	[[ -f "$DOTFILES_DIR/claude/CLAUDE.md" ]] && link_file "$DOTFILES_DIR/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
+	[[ -f "$DOTFILES_DIR/claude/settings.json" ]] && link_file "$DOTFILES_DIR/claude/settings.json" "$HOME/.claude/settings.json"
+	for dir in agents commands hooks mcp output-styles themes; do
+		[[ -d "$DOTFILES_DIR/claude/$dir" ]] && link_dir "$DOTFILES_DIR/claude/$dir" "$HOME/.claude/$dir"
+	done
+fi
+
+# Pi portable config. Sessions, auth, package installs, MCP tokens, caches, and trust state stay local.
+if [[ -d "$DOTFILES_DIR/pi-agent" ]]; then
+	mkdir -p "$HOME/.pi/agent"
+	for file in AGENTS.md CLAUDE.md GEMINI.md keybindings.json settings.json subagents.json mcp.json; do
+		[[ -e "$DOTFILES_DIR/pi-agent/$file" ]] && link_file "$DOTFILES_DIR/pi-agent/$file" "$HOME/.pi/agent/$file"
+	done
+	for dir in agents chains extensions gentle-ai skills themes; do
+		[[ -d "$DOTFILES_DIR/pi-agent/$dir" ]] && link_dir "$DOTFILES_DIR/pi-agent/$dir" "$HOME/.pi/agent/$dir"
+	done
+fi
+
+# Shared skills used by Pi and other agent harnesses.
+[[ -d "$DOTFILES_DIR/agents/skills" ]] && link_dir "$DOTFILES_DIR/agents/skills" "$HOME/.agents/skills"
 
 # Use the repo Git config without copying secrets or machine state.
 if [[ -f "$DOTFILES_DIR/git/config" ]]; then
@@ -91,6 +123,9 @@ if [[ -f "$DOTFILES_DIR/Brewfile" ]]; then
 		warn "Homebrew is not available. Install it manually, then run: brew bundle --file ~/.config/Brewfile"
 	fi
 fi
+
+# Safe macOS preferences for a development machine. Secrets and app logins stay manual.
+[[ -x "$DOTFILES_DIR/macos/defaults.sh" ]] && "$DOTFILES_DIR/macos/defaults.sh"
 
 info "Done. Restart your terminal."
 cat <<'EOF'
