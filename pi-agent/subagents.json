@@ -1,0 +1,37 @@
+{
+  "model_profiles": {
+    "discovery": {
+      "model": "amazon-bedrock/global.anthropic.claude-opus-4-6-v1"
+    },
+    "sdd-init": {
+      "model": "amazon-bedrock/global.anthropic.claude-opus-4-6-v1"
+    },
+    "sdd-explore": {
+      "model": "amazon-bedrock/global.anthropic.claude-opus-4-6-v1",
+      "effort": "high"
+    },
+    "sdd-proposal": {
+      "model": "openai-codex/gpt-5.5",
+      "effort": "high"
+    },
+    "sdd-spec": {
+      "model": "openai-codex/gpt-5.4"
+    },
+    "sdd-design": {
+      "model": "openai-codex/gpt-5.5",
+      "effort": "high"
+    },
+    "sdd-tasks": {
+      "model": "openai-codex/gpt-5.4-mini"
+    },
+    "sdd-apply": {
+      "model": "openai-codex/gpt-5.5"
+    },
+    "sdd-verify": {
+      "model": "openai-codex/gpt-5.5"
+    },
+    "sdd-archive": {
+      "model": "openai-codex/gpt-5.4-mini"
+    }
+  }
+}

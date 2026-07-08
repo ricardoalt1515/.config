@@ -1,0 +1,38 @@
+{
+  "activeMCP": "engram",
+  "mcpServers": {
+    "context7": {
+      "args": [
+        "-y",
+        "--package=@upstash/context7-mcp@2.2.5",
+        "--",
+        "context7-mcp"
+      ],
+      "command": "npx",
+      "directTools": true
+    },
+    "engram": {
+      "args": [
+        "mcp",
+        "--tools=agent"
+      ],
+      "command": "engram",
+      "directTools": true
+    },
+    "xapi": {
+      "args": [
+        "-y",
+        "@xdevplatform/xurl",
+        "mcp",
+        "https://api.x.com/mcp"
+      ],
+      "command": "npx",
+      "env": {
+        "CLIENT_ID": "${X_CLIENT_ID}",
+        "CLIENT_SECRET": "${X_CLIENT_SECRET}"
+      },
+      "lifecycle": "lazy",
+      "requestTimeoutMs": 300000
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "collapseChangelog": false,
+  "defaultModel": "gpt-5.5",
+  "defaultProvider": "openai-codex",
+  "defaultThinkingLevel": "medium",
+  "hideThinkingBlock": false,
+  "lastChangelogVersion": "0.80.3",
+  "packages": [
+    {
+      "extensions": [
+        "!extensions/startup-banner.ts"
+      ],
+      "source": "npm:gentle-pi"
+    },
+    "npm:gentle-engram",
+    "npm:pi-intercom",
+    "npm:@juicesharp/rpiv-ask-user-question",
+    "npm:pi-web-access",
+    "npm:pi-lens",
+    "npm:@juicesharp/rpiv-todo",
+    "npm:pi-btw",
+    "npm:pi-subagents-j0k3r",
+    "npm:pi-mcp-adapter"
+  ],
+  "quietStartup": true,
+  "showHardwareCursor": true,
+  "terminal": {
+    "showTerminalProgress": true
+  },
+  "theme": "Gentle"
+}
