@@ -1,0 +1,71 @@
+custom-shader = shaders/space.glsl
+custom-shader = shaders/cursor_smear_richard.glsl
+custom-shader-animation = true
+config-file = themes/richards
+background-opacity = 0.75
+background-blur-radius = 15
+
+gtk-tabs-location = hidden
+window-decoration = true
+
+gtk-titlebar = true
+title = ghostty
+command = /opt/homebrew/bin/herdr
+gtk-single-instance = true
+unfocused-split-opacity = 0.55
+split-divider-color = #524f67
+font-family = IosevkaTerm NF
+font-size = 16
+window-padding-color = extend
+window-step-resize = false
+window-padding-balance = true
+window-height = 100
+window-width = 100
+
+copy-on-select = clipboard
+
+# Hide the mouse cursor while typing
+mouse-hide-while-typing = true
+
+# Keep a split zoomed when navigating between splits
+split-preserve-zoom = true
+
+# Stop the dock icon from bouncing every time a program rings the bell
+bell-features = no-attention
+
+### Mac Alt Fix
+macos-option-as-alt = left
+
+keybind = alt+left=unbind
+keybind = alt+right=unbind
+
+# Split Management
+# Disabled while Herdr is the primary multiplexer.
+# keybind = alt+v=new_split:right
+# keybind = alt+d=new_split:down
+
+# Resize Split
+# Disabled while Herdr is the primary multiplexer.
+# keybind = ctrl+shift+j=resize_split:up,10
+# keybind = ctrl+shift+k=resize_split:down,10
+# keybind = ctrl+shift+h=resize_split:left,10
+# keybind = ctrl+shift+l=resize_split:right,10
+
+# Navigation
+# alt+hjkl freed so they pass through to apps (pi editor cursor nav). Splits are managed via tmux.
+keybind = alt+k=unbind
+keybind = alt+j=unbind
+keybind = alt+h=unbind
+keybind = alt+l=unbind
+
+# Miscellaneous
+keybind = cmd+k=clear_screen
+
+
+# Use it by writing 'nvim' first and then the keybinding to open the file with nvim
+keybind = alt+s=write_screen_file:paste
+keybind = global:cmd+backquote=toggle_quick_terminal
+# Disabled while Herdr is the primary multiplexer.
+# keybind = alt+enter=toggle_split_zoom
+# keybind = alt+e=equalize_splits
+keybind = shift+enter=text:\x1b\r

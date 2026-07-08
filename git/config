@@ -1,0 +1,45 @@
+[user]
+	name = ricardoalt1515
+	email = ricardoalt1515@users.noreply.github.com
+[credential]
+	helper = gh
+[credential "https://github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper =
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[init]
+	defaultBranch = main
+[push]
+	autoSetupRemote = true
+[pull]
+	rebase = true
+[fetch]
+	prune = true
+[core]
+	pager = delta
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	dark = true
+	navigate = true
+	line-numbers = true
+	hyperlinks = true
+	side-by-side = false
+	syntax-theme = morningstar
+	minus-style = "syntax #2e1a1a"
+	minus-emph-style = "syntax #4d2424"
+	plus-style = "syntax #1a2e1a"
+	plus-emph-style = "syntax #244d24"
+[diff]
+	algorithm = histogram
+	colorMoved = default
+[merge]
+	conflictstyle = zdiff3
+[rerere]
+	enabled = true
+[column]
+	ui = auto
+[branch]
+	sort = -committerdate

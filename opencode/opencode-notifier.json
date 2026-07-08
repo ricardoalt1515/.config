@@ -1,0 +1,15 @@
+{
+  "sound": true,
+  "notification": true,
+  "events": {
+    "complete": { "sound": true, "notification": true },
+    "permission": { "sound": true, "notification": true },
+    "error": { "sound": true, "notification": true },
+    "subagent_complete": { "sound": false, "notification": false }
+  },
+  "sounds": {
+    "complete": null,
+    "permission": null,
+    "error": null
+  }
+}

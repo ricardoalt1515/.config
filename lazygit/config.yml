@@ -1,0 +1,146 @@
+# Comportamiento general
+disableStartupPopups: true     # sin popups introductorios al abrir
+
+gui:
+  nerdFontsVersion: "3"        # IosevkaTerm NF ya instalada — esto enciende los iconos
+  showFileTree: true           # Árbol en vez de lista plana
+  filterMode: fuzzy            # Búsqueda fuzzy (como Telescope en LazyVim)
+  showRandomTip: false
+  scrollHeight: 4
+  showDivergenceFromBaseBranch: arrowAndNumber  # ramas: ↑↓ ahead/behind vs base
+  showNumstatInFilesView: true                  # +/- líneas por archivo en Files
+  switchTabsWithPanelJumpKeys: true             # 1-5 de nuevo → cicla tabs del panel
+  # Layout enfocado SIN perder contexto (estilo Linear/opencode):
+  expandFocusedSidePanel: true   # el panel enfocado crece; los demás se achican pero siguen VISIBLES
+  expandedSidePanelWeight: 3     # cuánto crece el enfocado (default 2; 3 = más foco)
+  enlargedSideViewLocation: top  # al hacer + (half), el diff toma todo el ancho con una tira de contexto arriba
+  # #5 Tema: paleta morningstar (la misma de opencode/ghostty — Kanagawa Wave tuneado)
+  authorColors:
+    "ricardoalt1515": "#7FB4CA"   # primary
+    "*": "#A3B5D6"                # secondary
+  branchColorPatterns:
+    "^feat/": "#B7CC85"           # success
+    "^fix/": "#CB7C94"            # error
+    "^refactor/": "#7FB4CA"       # info/primary
+    "^chore/": "#DEBA87"          # warning
+    "^docs/": "#A3B5D6"           # secondary
+    "^(main|master)$": "#E0C15A"  # accent (dorado)
+  # Bordes/selección morningstar. Con opacidad 0.50 los slabs brillantes quedan
+  # turbios; estos tonos se funden con el fondo #06080f del terminal.
+  theme:
+    activeBorderColor:
+      - "#7FB4CA"                 # borderActive
+      - bold
+    inactiveBorderColor:
+      - "#313342"                 # border
+    optionsTextColor:
+      - "#7FB4CA"
+    selectedLineBgColor:
+      - "#263356"                 # selection (igual que ghostty)
+    selectedRangeBgColor:
+      - "#263356"
+    cherryPickedCommitBgColor:
+      - "#263356"
+    cherryPickedCommitFgColor:
+      - "#7FB4CA"
+    unstagedChangesColor:
+      - "#CB7C94"                 # error/rojo
+
+git:
+  pagers:
+    # Diff INLINE (sin side-by-side: el panel de lazygit es muy angosto y la
+    # segunda columna se corta). Syntax theme + fondos de diff = paleta morningstar
+    # (misma que opencode/ghostty), sutil para no pelear con la transparencia 0.50.
+    - pager: 'delta --dark --paging=never --line-numbers --syntax-theme morningstar --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}" --minus-style "syntax #2e1a1a" --minus-emph-style "syntax #4d2424" --plus-style "syntax #1a2e1a" --plus-emph-style "syntax #244d24"'
+      colorArg: always
+  autoFetch: true
+  fetchAll: true
+  mainBranches:                # ramas base para cálculos de divergencia/rebase
+    - main
+    - master
+    - dev
+  commit:
+    autoWrapCommitMessage: true
+    autoWrapWidth: 72          # Coherente con conventional commits (header <= 72)
+
+os:
+  editPreset: "nvim"           # Salta a la línea correcta al abrir desde lazygit
+  copyToClipboardCmd: "tmux load-buffer -w -"   # Portapapeles confiable dentro de tmux
+
+# ── Custom commands ───────────────────────────────────────────────────────────
+customCommands:
+  # #1 Commit convencional guiado.
+  #    Flujo: stageá los archivos (espacio / a) y presioná C.
+  #    Sobrescribe el default C ("commit con editor de git") a propósito.
+  - key: "C"
+    context: "files"
+    description: "Commit convencional (feat/fix/...)"
+    prompts:
+      - type: "menu"
+        title: "Tipo de commit"
+        key: "Type"
+        options:
+          - name: "feat"
+            description: "Nueva funcionalidad"
+            value: "feat"
+          - name: "fix"
+            description: "Corrección de bug"
+            value: "fix"
+          - name: "refactor"
+            description: "Refactor sin cambio de comportamiento"
+            value: "refactor"
+          - name: "perf"
+            description: "Mejora de performance"
+            value: "perf"
+          - name: "docs"
+            description: "Documentación"
+            value: "docs"
+          - name: "test"
+            description: "Tests"
+            value: "test"
+          - name: "build"
+            description: "Build o dependencias"
+            value: "build"
+          - name: "ci"
+            description: "CI/CD"
+            value: "ci"
+          - name: "style"
+            description: "Formato (sin cambio de código)"
+            value: "style"
+          - name: "chore"
+            description: "Mantenimiento / tooling"
+            value: "chore"
+      - type: "input"
+        title: "Scope (opcional — Enter para omitir)"
+        key: "Scope"
+        initialValue: ""
+      - type: "input"
+        title: "Descripción (imperativo, sin punto final)"
+        key: "Description"
+        initialValue: ""
+    command: 'git commit -m "{{.Form.Type}}{{if .Form.Scope}}({{.Form.Scope}}){{end}}: {{.Form.Description}}"'
+    loadingText: "Commiteando..."
+
+  # #3 Crear PR en el navegador (usa la rama actual). gh respeta tu auth y templates.
+  - key: "<c-p>"
+    context: "localBranches, status"
+    description: "Crear PR en el navegador (gh pr create --web)"
+    command: "gh pr create --web"
+    loadingText: "Abriendo formulario de PR..."
+    output: "none"
+
+  # #3 Ver el PR de la rama actual en el navegador.
+  - key: "<c-v>"
+    context: "localBranches, status"
+    description: "Ver PR de la rama en el navegador (gh pr view --web)"
+    command: "gh pr view --web"
+    loadingText: "Abriendo PR..."
+    output: "none"
+
+  # #3 Ver el estado de los checks del PR de la rama actual.
+  - key: "<c-k>"
+    context: "localBranches, status"
+    description: "Estado de checks del PR (gh pr checks)"
+    command: "gh pr checks"
+    output: "terminal"
+    loadingText: "Consultando checks..."

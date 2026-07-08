@@ -1,0 +1,16 @@
+{
+  "$schema": "https://opencode.ai/tui.json",
+  "keybinds": {
+    "input_delete": "delete,shift+delete",
+    "input_delete_to_line_start": "none",
+    "leader": "ctrl+o",
+    "messages_half_page_down": "ctrl+d",
+    "messages_half_page_up": "ctrl+u"
+  },
+  "plugin": [
+    "opencode-subagent-statusline",
+    "opencode-sdd-engram-manage",
+    "./tui-plugins/gentle-logo.tsx"
+  ],
+  "theme": "morningstar"
+}

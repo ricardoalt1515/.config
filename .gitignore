@@ -1,0 +1,54 @@
+# macOS cruft
+.DS_Store
+**/.DS_Store
+
+# Local AI/runtime state
+.atl/
+.pi/
+.pi-lens/
+.codegraph/
+**/.pi-lens/
+goose/
+gga/
+.windsurf/
+
+# Secrets and auth state
+# GitHub Copilot local app state contains oauth_token — never commit.
+github-copilot/
+gh/hosts.yml
+
+# App/runtime state that should not be restored across Macs
+configstore/
+herdr/*.log
+herdr/*.sock
+herdr/session.json
+herdr/release-notes.json
+hunk/state.json
+opencode/opencode-notifier-state.json
+
+# Generated caches/plugins; reinstall or regenerate from config
+fish/completions/
+fish/fish_variables
+tmux/plugins/
+raycast/extensions/
+vscode-js-debug/
+fzf/
+
+# Clipboard/scratch exports
+.gemini-clipboard/
+*.rayconfig
+plan.md
+context.md
+research.md
+
+# Local package/app internals
+.opencode/
+opencode/opensrc/
+opencode/*.bak
+zed/prompts/**/*.mdb
+uv/
+
+# Root/internal lockfiles that are not portable config
+package-lock.json
+.opencode/package-lock.json
+nvim/lazy-lock.json
