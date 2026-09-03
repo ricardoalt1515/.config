@@ -1,0 +1,11 @@
+# Optional desktop and terminal workflow.
+tap "nikitabobko/tap"
+
+brew "herdr"
+brew "tmux"
+brew "hunk"
+brew "atuin"
+brew "carapace"
+
+cask "nikitabobko/tap/aerospace"
+cask "raycast"

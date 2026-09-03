@@ -1,90 +1,84 @@
 # Dotfiles
 
-Personal macOS configuration. The goal is intentionally simple: clone this repo on a new Mac and restore the configs already used on the current machine.
+Portable macOS development configuration. The repository is intended to live at `~/.dotfiles`; authored config is projected to explicit destinations under `~/.config` and `$HOME`.
 
-## New Mac restore
+The current checkout may remain at `~/.config` during development. `restore.sh` detects source-equals-destination paths and leaves them in place.
+
+## New Mac
+
+Install Apple's command line tools and Homebrew first, then clone and inspect the restore:
 
 ```bash
-# If macOS does not have git yet, install Apple's command line tools first:
-# xcode-select --install
-
-git clone git@github.com:ricardoalt1515/.config.git ~/.config
-cd ~/.config
-chmod +x restore.sh
+xcode-select --install
+git clone https://github.com/ricardoalt1515/.config.git ~/.dotfiles
+cd ~/.dotfiles
+./restore.sh --dry-run
 ./restore.sh
 ```
 
-## What this restores
+The default run projects the core config and installs `Brewfile`. Homebrew is required but is never installed automatically.
 
-`restore.sh` installs the curated tools in `Brewfile` and restores the tracked configs.
+## Profiles
 
-Tools include:
-
-- Fish
-- Ghostty
-- Neovim
-- Starship
-- Tmux/Herdr
-- Git/GitHub CLI/Git Delta
-- Lazygit
-- AeroSpace
-- Raycast
-- WezTerm
-- AI/dev harness tools: Codex, CodexBar, Engram, Gentle AI, Worktrunk, and Pi plugins
-
-Configs include:
-
-- Fish config
-- Ghostty config
-- Neovim config
-- Starship config
-- Tmux/Herdr config
-- Git preferences
-- Lazygit config
-- AeroSpace config
-- OpenCode/Gentle AI config
-- Claude Code agents, commands, status line, MCP definitions, theme, and safe settings
-- Pi agents, chains, extensions, settings, themes, MCP definitions, and shared skills
-- Shared `~/.agents/skills` used by Pi and other agent harnesses
-- Conservative macOS developer preferences from `macos/defaults.sh`
-- Other tracked files under `~/.config`
-
-## What stays manual
-
-These should not be committed or blindly restored:
-
-- SSH keys
-- GitHub authentication
-- 1Password/session state
-- Raycast account login
-- Atuin login/sync
-- Claude Code login/history/cache/telemetry
-- Pi auth/session/trust/cache/MCP OAuth state
-- Copilot or other OAuth tokens
-
-After restoring, run the relevant manual steps:
+Profiles are explicit and repeatable:
 
 ```bash
+# Core config and packages only (the default)
+./restore.sh --profile core
+
+# Core plus optional desktop and terminal tools
+./restore.sh --profile core --profile optional
+
+# Agent packages without linking mutable agent config directories
+./restore.sh --profile agents
+
+# Project config only; no package or defaults commands
+./restore.sh --profile core --profile optional --links-only
+```
+
+- Core: Fish, Ghostty, Starship, Zoxide, Neovim/LazyVim, Git, GH, Delta, Bat, and Lazygit.
+- Optional: Herdr, tmux, AeroSpace, Hunk, Atuin, Carapace, and Raycast.
+- Agents: package manifests for the tracked agent harnesses. Pi plugins remain owned by Pi's package manager and are not globally duplicated.
+
+Herdr is the primary multiplexer. Ghostty launches a PATH-resolved Herdr when available and falls back to the login shell otherwise. tmux is installed and configured by the optional profile, but neither Ghostty nor Fish starts it automatically.
+
+## Restore Safety
+
+`restore.sh` links only the authored resources named in the script. Mutable neighbors such as Fish variables/completions, Neovim lock state, and Bat cache remain local; the script never replaces all of `~/.config`.
+
+- Existing non-symlink targets are moved to `~/.dotfiles-backups/YYYYMMDD-HHMMSS/` before linking.
+- Re-running the same projection keeps correct links unchanged.
+- `--dry-run` prints link, backup, package, and defaults actions without applying them.
+- `--macos-defaults` is required to run `macos/defaults.sh`.
+
+OpenCode, Claude, and Pi config directories are intentionally not linked. They contain mutable or generated assets managed by their own tools. Logins, sessions, caches, telemetry, package state, and trust decisions stay local.
+
+Skills are intentionally out of scope: this repository does not track, copy, link, or index them.
+
+## Git And Authentication
+
+`git/config` contains portable behavior only. Set identity locally after restore:
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
 gh auth login
 ```
 
-Then sign in to Raycast, Atuin, Claude Code, Pi providers, Copilot, and any app that stores credentials locally.
+SSH keys, GitHub authentication, Git credential helpers, Raycast login, Atuin sync, and all agent-provider authentication remain manual and must not be committed.
 
-## Packages
+## Package Manifests
 
-`Brewfile` is intentionally curated. It is not a full dump of every package installed on the current Mac.
+- `Brewfile`: core packages.
+- `Brewfile.optional`: optional desktop and terminal packages.
+- `Brewfile.agents`: agent CLIs and applications, excluding Pi plugins.
 
-If you want to refresh it from the current machine, generate a temporary dump and copy only the tools you really want on a fresh Mac:
+Check manifests without installing anything:
 
 ```bash
-brew bundle dump --file /tmp/current.Brewfile --force
+brew bundle check --file Brewfile --verbose
+brew bundle check --file Brewfile.optional --verbose
+brew bundle check --file Brewfile.agents --verbose
 ```
 
-Avoid committing the full dump blindly. Project-specific tools and local experiments should stay out of the base restore flow.
-
-## Notes
-
-- This repo is the source of truth for portable config.
-- `Brewfile` is the source of truth for base apps and CLI tools.
-- Runtime state, generated completions, app caches, and auth files are intentionally ignored.
-- Existing files are backed up to `~/.config-backup-YYYYMMDD-HHMMSS/` before being replaced by symlinks.
+Missing packages are expected on a machine that has not yet restored a profile.

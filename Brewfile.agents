@@ -1,0 +1,17 @@
+# Agent harnesses only. Pi owns its plugins through Pi's package manager.
+tap "gentleman-programming/tap", "https://github.com/Gentleman-Programming/homebrew-tap", trusted: true
+tap "steipete/tap"
+
+brew "gentleman-programming/tap/engram"
+brew "gentleman-programming/tap/gentle-ai"
+brew "node"
+brew "worktrunk"
+
+cask "codex"
+cask "steipete/tap/codexbar"
+
+npm "@anthropic-ai/claude-code"
+npm "@earendil-works/pi-coding-agent"
+npm "@github/copilot"
+npm "gentle-engram"
+npm "gentle-pi"
