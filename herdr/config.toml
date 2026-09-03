@@ -2,6 +2,14 @@ onboarding = false
 # herdr configuration managed by Gentleman.Dots.
 # This file is copied into ~/.config/herdr/config.toml during installation.
 
+[session]
+resume_agents_on_restore = true
+
+[update]
+channel = "stable"
+version_check = true
+manifest_check = true
+
 [theme]
 # Use a built-in dark theme with neutral foregrounds so Herdr does not inherit
 # Ghostty bright-black selected rows or Kanagawa's warm/yellow label text.
@@ -19,8 +27,44 @@ yellow = "#DEBA87"
 
 [ui]
 accent = "#6FA0AF"
+hide_tab_bar_when_single_tab = true
+sidebar_collapsed_mode = "hidden"
 
+# Treat the agent panel as an attention queue while spaces keep project order.
+# Name new spaces as `<project> / <concern>`; keep agent/model names out of labels.
+agent_panel_sort = "priority"
 show_agent_labels_on_pane_borders = true
+
+[ui.sidebar.agents]
+row_gap = 0
+rows = [
+  [
+    "state_icon",
+    { token = "state_text", bold = true, dim = false },
+    { token = "agent", fg = "#6FA0AF", bold = true, dim = false },
+  ],
+  [
+    "workspace",
+    { token = "tab", dim = true },
+  ],
+  [
+    { token = "terminal_title_stripped", dim = true },
+  ],
+]
+
+[ui.sidebar.spaces]
+row_gap = 0
+rows = [
+  [
+    "state_icon",
+    { token = "workspace", bold = true, dim = false },
+  ],
+  [
+    { token = "branch", dim = true },
+    { token = "git_status", dim = true },
+  ],
+]
+
 [keys]
 # Match tmux/Zellij-style prefix muscle memory.
 prefix = "ctrl+a"
@@ -34,6 +78,15 @@ next_agent = "prefix+alt+j"
 # Use Ctrl after the prefix: Alt+number is owned by skhd/yabai spaces,
 # and Shift+number did not reach Herdr reliably in the current terminal setup.
 focus_agent = "prefix+ctrl+1..9"
+last_pane = "prefix+backtick"
+
+[[keys.command]]
+key = "prefix+alt+g"
+type = "popup"
+command = "exec \"${SHELL:-/bin/sh}\" -lc 'exec lazygit'"
+width = "90%"
+height = "90%"
+description = "open lazygit"
 
 [ui.sound]
 enabled = true
@@ -41,4 +94,4 @@ done_path = "sounds/staplebops-01.mp3"
 request_path = "sounds/staplebops-02.mp3"
 
 [ui.toast]
-delivery = "off"
+delivery = "herdr"

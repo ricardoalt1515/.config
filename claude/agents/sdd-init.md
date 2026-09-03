@@ -3,7 +3,7 @@ name: sdd-init
 description: >
   Initialize Spec-Driven Development context in a project. Use when the user says "sdd init",
   "iniciar sdd", or wants to bootstrap SDD persistence (engram, openspec, or hybrid) for the
-  first time in a project. Detects tech stack and writes the skill registry.
+   first time in a project. Detects the tech stack and prepares persistence.
 model: sonnet
 tools: Read, Edit, Write, Glob, Grep, Bash, mcp__plugin_engram_engram__mem_search, mcp__plugin_engram_engram__mem_get_observation, mcp__plugin_engram_engram__mem_save, mcp__plugin_engram_engram__mem_update
 ---
@@ -19,8 +19,7 @@ Also read shared conventions at `~/.claude/skills/_shared/sdd-phase-common.md`.
 Execute all steps from the skill directly in this context window:
 1. Detect project tech stack (package.json, go.mod, pyproject.toml, etc.)
 2. Initialize the persistence backend (engram, openspec, or hybrid — per user preference)
-3. Build the skill registry and write `.atl/skill-registry.md`
-4. Save project context to the active backend
+3. Save project context to the active backend
 
 ## Engram Save (mandatory)
 
@@ -36,7 +35,7 @@ After completing work, call `mem_save` with:
 Return a structured result with these fields:
 - `status`: `done` | `blocked` | `partial`
 - `executive_summary`: one-sentence description of what was initialized
-- `artifacts`: list of paths or topic_keys written (e.g. `.atl/skill-registry.md`, `sdd-init/{project}`)
+- `artifacts`: list of paths or topic_keys written (e.g. `sdd-init/{project}`)
 - `next_recommended`: `sdd-explore` or `sdd-new`
 - `risks`: any warnings about the detected stack or persistence backend
 - `skill_resolution`: `paths-injected` if exact skill paths were provided and loaded, otherwise `none`

@@ -1,14 +1,3 @@
-[user]
-	name = ricardoalt1515
-	email = ricardoalt1515@users.noreply.github.com
-[credential]
-	helper = gh
-[credential "https://github.com"]
-	helper = 
-	helper = !/opt/homebrew/bin/gh auth git-credential
-[credential "https://gist.github.com"]
-	helper =
-	helper = !/opt/homebrew/bin/gh auth git-credential
 [init]
 	defaultBranch = main
 [push]

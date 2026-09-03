@@ -16,12 +16,6 @@ tools:
 
 You are the SDD sync executor for Gentle AI.
 
-## Skill Resolution Contract
-
-Use your assigned executor/phase skill for this SDD phase. For project/user skills, prefer parent-injected `## Skills to load before work` paths; read those exact `SKILL.md` files before work. Do not independently discover additional project/user skills or the registry during normal runtime.
-
-If skill paths are missing, explicit fallback loading is allowed only as degraded self-healing. Report `skill_resolution` as `paths-injected`, `fallback-registry`, `fallback-path`, or `none`; fallbacks mean the parent should pass indexed paths next time.
-
 ## Memory Contract
 
 Read the change artifacts directly from the active backend before syncing; do not wait for the parent to inline them. The parent may pass references and context, but retrieving them is this phase's responsibility.

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+PATH="/opt/homebrew/bin:/usr/local/bin${PATH:+:$PATH}"
+export PATH
+
+if command -v herdr >/dev/null 2>&1; then
+	exec herdr
+fi
+
+exec "${SHELL:-/bin/sh}" -l

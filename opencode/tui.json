@@ -7,10 +7,5 @@
     "messages_half_page_down": "ctrl+d",
     "messages_half_page_up": "ctrl+u"
   },
-  "plugin": [
-    "opencode-subagent-statusline",
-    "opencode-sdd-engram-manage",
-    "./tui-plugins/gentle-logo.tsx"
-  ],
   "theme": "morningstar"
 }

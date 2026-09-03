@@ -15,24 +15,25 @@ if test $IS_TERMUX -eq 1
     # Termux - use PREFIX for binaries
     set -x PATH $PREFIX/bin $HOME/.local/bin $HOME/.cargo/bin $PATH
 else if test (uname) = Darwin
-    # macOS - check for Apple Silicon vs Intel
-    if test -f /opt/homebrew/bin/brew
-        # Apple Silicon (M1/M2/M3)
-        set BREW_BIN /opt/homebrew/bin/brew
-    else if test -f /usr/local/bin/brew
-        # Intel Mac
-        set BREW_BIN /usr/local/bin/brew
-    end
     set -x PATH $HOME/.local/bin $HOME/.opencode/bin $HOME/.volta/bin $HOME/.bun/bin $HOME/.nix-profile/bin /nix/var/nix/profiles/default/bin /usr/local/bin $HOME/.config $HOME/.cargo/bin /usr/local/lib/* $PATH
 else
-    # Linux
-    set BREW_BIN /home/linuxbrew/.linuxbrew/bin/brew
     set -x PATH $HOME/.local/bin $HOME/.opencode/bin $HOME/.volta/bin $HOME/.bun/bin $HOME/.nix-profile/bin /nix/var/nix/profiles/default/bin /usr/local/bin $HOME/.config $HOME/.cargo/bin /usr/local/lib/* $PATH
 end
 
-# Only eval brew shellenv if brew is installed (not on Termux)
-if test $IS_TERMUX -eq 0; and set -q BREW_BIN; and test -f $BREW_BIN
-    eval ($BREW_BIN shellenv)
+# Resolve Homebrew through PATH first, then the standard macOS locations.
+if test $IS_TERMUX -eq 0
+    set -l brew_bin (command -s brew)
+    if not test -x "$brew_bin"
+        for candidate in /opt/homebrew/bin/brew /usr/local/bin/brew
+            if test -x $candidate
+                set brew_bin $candidate
+                break
+            end
+        end
+    end
+    if test -x "$brew_bin"
+        eval ($brew_bin shellenv)
+    end
 end
 
 # Do not auto-start tmux from the shell.
@@ -40,29 +41,33 @@ end
 
 # Initialize tools
 set -gx STARSHIP_CONFIG ~/.config/starship/starship.toml
-starship init fish | source
-zoxide init fish | source
-atuin init fish | source
-fzf --fish | source
+if type -q starship
+    starship init fish | source
+end
+if type -q zoxide
+    zoxide init fish | source
+end
+if type -q atuin
+    atuin init fish | source
+end
+if type -q fzf
+    fzf --fish | source
+end
 
 set -x PATH $HOME/.cargo/bin $PATH
 
 # Carapace completions
-set -Ux CARAPACE_BRIDGES 'zsh,fish,bash,inshellisense'
-
-if not test -d ~/.config/fish/completions
-    mkdir -p ~/.config/fish/completions
-end
-
-if not test -f ~/.config/fish/completions/.initialized
+if type -q carapace
+    set -Ux CARAPACE_BRIDGES 'zsh,fish,bash,inshellisense'
     if not test -d ~/.config/fish/completions
         mkdir -p ~/.config/fish/completions
     end
-    carapace --list | awk '{print $1}' | xargs -I{} touch ~/.config/fish/completions/{}.fish
-    touch ~/.config/fish/completions/.initialized
+    if not test -f ~/.config/fish/completions/.initialized
+        carapace --list | awk '{print $1}' | xargs -I{} touch ~/.config/fish/completions/{}.fish
+        touch ~/.config/fish/completions/.initialized
+    end
+    carapace _carapace | source
 end
-
-carapace _carapace | source
 
 set -g fish_greeting ""
 
@@ -81,7 +86,11 @@ alias cl='clear'
 
 # Herramientas modernas
 alias cat='bat'
-alias ls='eza --icons=always'
+if type -q eza
+    alias ls='eza --icons=always'
+else
+    alias ls='command ls'
+end
 alias vim='nvim'
 alias lg='lazygit'
 

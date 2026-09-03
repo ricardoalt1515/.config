@@ -33,45 +33,45 @@ CACHE_READ=$(echo "$input" | jq -r '.context_window.current_usage.cache_read_inp
 
 TOTAL_USED=$((INPUT_TOKENS + CACHE_CREATE + CACHE_READ))
 if [ "$CTX_SIZE" -gt 0 ] 2>/dev/null; then
-  CTX_PERCENT=$((TOTAL_USED * 100 / CTX_SIZE))
+	CTX_PERCENT=$((TOTAL_USED * 100 / CTX_SIZE))
 else
-  CTX_PERCENT=0
+	CTX_PERCENT=0
 fi
 [ "$CTX_PERCENT" -gt 100 ] && CTX_PERCENT=100
 [ "$CTX_PERCENT" -lt 0 ] && CTX_PERCENT=0
 
 # Function to get MCP servers from config
 get_mcp_servers() {
-  # Check cache first
-  if [ -f "$MCP_CACHE_FILE" ]; then
-    CACHE_AGE=$(($(date +%s) - $(stat -f %m "$MCP_CACHE_FILE" 2>/dev/null || echo 0)))
-    if [ "$CACHE_AGE" -lt "$MCP_CACHE_TTL" ]; then
-      cat "$MCP_CACHE_FILE"
-      return
-    fi
-  fi
+	# Check cache first
+	if [ -f "$MCP_CACHE_FILE" ]; then
+		CACHE_AGE=$(($(date +%s) - $(stat -f %m "$MCP_CACHE_FILE" 2>/dev/null || echo 0)))
+		if [ "$CACHE_AGE" -lt "$MCP_CACHE_TTL" ]; then
+			cat "$MCP_CACHE_FILE"
+			return
+		fi
+	fi
 
-  # Read MCP servers from ~/.claude.json config
-  local CURRENT_DIR
-  CURRENT_DIR=$(echo "$input" | jq -r '.workspace.current_dir // ""')
+	# Read MCP servers from ~/.claude.json config
+	local CURRENT_DIR
+	CURRENT_DIR=$(echo "$input" | jq -r '.workspace.current_dir // ""')
 
-  # Get servers from current project first, fallback to home
-  local SERVERS=""
+	# Get servers from current project first, fallback to home
+	local SERVERS=""
 
-  if [ -n "$CURRENT_DIR" ]; then
-    SERVERS=$(jq -r ".projects[\"$CURRENT_DIR\"].mcpServers // {} | keys[]" ~/.claude.json 2>/dev/null | tr '\n' ',' | sed 's/,$//')
-  fi
+	if [ -n "$CURRENT_DIR" ]; then
+		SERVERS=$(jq -r ".projects[\"$CURRENT_DIR\"].mcpServers // {} | keys[]" ~/.claude.json 2>/dev/null | tr '\n' ',' | sed 's/,$//')
+	fi
 
-  # Fallback to the home directory config if current project has no MCP.
-  if [ -z "$SERVERS" ]; then
-    SERVERS=$(jq -r --arg home "$HOME" '.projects[$home].mcpServers // {} | keys[]' ~/.claude.json 2>/dev/null | tr '\n' ',' | sed 's/,$//')
-  fi
+	# Fallback to the home directory config if current project has no MCP.
+	if [ -z "$SERVERS" ]; then
+		SERVERS=$(jq -r --arg home "$HOME" '.projects[$home].mcpServers // {} | keys[]' ~/.claude.json 2>/dev/null | tr '\n' ',' | sed 's/,$//')
+	fi
 
-  local ALL_SERVERS="$SERVERS"
+	local ALL_SERVERS="$SERVERS"
 
-  # Save to cache (all as "configured" - we can't check connection status easily)
-  echo "$ALL_SERVERS|" >"$MCP_CACHE_FILE"
-  echo "$ALL_SERVERS|"
+	# Save to cache (all as "configured" - we can't check connection status easily)
+	echo "$ALL_SERVERS|" >"$MCP_CACHE_FILE"
+	echo "$ALL_SERVERS|"
 }
 
 # Get MCP status
@@ -81,35 +81,35 @@ MCP_DISCONNECTED=$(echo "$MCP_DATA" | cut -d'|' -f2)
 
 # Format MCP display
 format_mcp() {
-  local result=""
+	local result=""
 
-  # Connected servers (green)
-  if [ -n "$MCP_CONNECTED" ]; then
-    IFS=',' read -ra SERVERS <<<"$MCP_CONNECTED"
-    for srv in "${SERVERS[@]}"; do
-      if [ -n "$result" ]; then
-        result+=" "
-      fi
-      result+="${SUCCESS}${srv}${NC}"
-    done
-  fi
+	# Connected servers (green)
+	if [ -n "$MCP_CONNECTED" ]; then
+		IFS=',' read -ra SERVERS <<<"$MCP_CONNECTED"
+		for srv in "${SERVERS[@]}"; do
+			if [ -n "$result" ]; then
+				result+=" "
+			fi
+			result+="${SUCCESS}${srv}${NC}"
+		done
+	fi
 
-  # Disconnected servers (red + strikethrough)
-  if [ -n "$MCP_DISCONNECTED" ]; then
-    IFS=',' read -ra SERVERS <<<"$MCP_DISCONNECTED"
-    for srv in "${SERVERS[@]}"; do
-      if [ -n "$result" ]; then
-        result+=" "
-      fi
-      result+="${ERROR}${STRIKE}${srv}${NC}"
-    done
-  fi
+	# Disconnected servers (red + strikethrough)
+	if [ -n "$MCP_DISCONNECTED" ]; then
+		IFS=',' read -ra SERVERS <<<"$MCP_DISCONNECTED"
+		for srv in "${SERVERS[@]}"; do
+			if [ -n "$result" ]; then
+				result+=" "
+			fi
+			result+="${ERROR}${STRIKE}${srv}${NC}"
+		done
+	fi
 
-  if [ -z "$result" ]; then
-    echo "${MUTED}no mcp${NC}"
-  else
-    echo "$result"
-  fi
+	if [ -z "$result" ]; then
+		echo "${MUTED}no mcp${NC}"
+	else
+		echo "$result"
+	fi
 }
 
 MCP_DISPLAY=$(format_mcp)
@@ -121,10 +121,10 @@ DIR_NAME=$(basename "$DIR")
 BRANCH=""
 GIT_DIRTY=""
 if git rev-parse --git-dir >/dev/null 2>&1; then
-  BRANCH=$(git branch --show-current 2>/dev/null)
-  if [[ -n $(git status --porcelain 2>/dev/null) ]]; then
-    GIT_DIRTY="*"
-  fi
+	BRANCH=$(git branch --show-current 2>/dev/null)
+	if [[ -n $(git status --porcelain 2>/dev/null) ]]; then
+		GIT_DIRTY="*"
+	fi
 fi
 
 # Model icon
@@ -141,11 +141,11 @@ FILLED=$((CTX_PERCENT * BAR_WIDTH / 100))
 EMPTY=$((BAR_WIDTH - FILLED))
 
 if [ "$CTX_PERCENT" -ge 80 ]; then
-  BAR_COLOR="$ERROR"
+	BAR_COLOR="$ERROR"
 elif [ "$CTX_PERCENT" -ge 50 ]; then
-  BAR_COLOR="$ACCENT"
+	BAR_COLOR="$ACCENT"
 else
-  BAR_COLOR="$SUCCESS"
+	BAR_COLOR="$SUCCESS"
 fi
 
 BAR="${BAR_COLOR}["
@@ -161,8 +161,8 @@ LINE+="${SEP}"
 LINE+="${ACCENT}󰉋 ${DIR_NAME}${NC}"
 
 if [ -n "$BRANCH" ]; then
-  LINE+="${SEP}"
-  LINE+="${SECONDARY} ${BRANCH}${GIT_DIRTY}${NC}"
+	LINE+="${SEP}"
+	LINE+="${SECONDARY} ${BRANCH}${GIT_DIRTY}${NC}"
 fi
 
 LINE+="${SEP}"
