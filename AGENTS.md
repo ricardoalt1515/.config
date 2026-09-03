@@ -7,6 +7,7 @@ This repo is a public, sanitized macOS dotfiles bootstrap. Its goal is simple: c
 - Never commit secrets, auth state, sessions, caches, telemetry, generated completions, or app runtime databases.
 - Never reintroduce personal/client project metadata, private repo paths, personal emails, or `/Users/<name>` hardcoded paths.
 - Keep this repo a small bootstrap, not a full installer framework.
+- This repository does not track, copy, link, or index agent skills.
 - Do not touch sibling FZF worktrees unless the user explicitly asks; they may contain unfinished work.
 - Do not force-push or rewrite history unless the user explicitly authorizes that exact operation.
 
@@ -21,9 +22,8 @@ This repo is a public, sanitized macOS dotfiles bootstrap. Its goal is simple: c
 
 - `restore.sh` links portable config into `$HOME` and runs the curated package/bootstrap steps.
 - `Brewfile` installs only base tools/apps needed by tracked config.
-- `claude/` mirrors safe Claude Code config for `~/.claude`.
+- `claude/` stores portable Claude Code config; restore does not project it.
 - `pi-agent/` mirrors safe Pi config for `~/.pi/agent`.
-- `agents/skills/` mirrors shared `~/.agents/skills` for Pi and other agent harnesses.
 - `opencode/` stores OpenCode/Gentle AI config under `~/.config/opencode`.
 - `macos/defaults.sh` applies conservative, non-secret macOS developer preferences.
 
@@ -44,7 +44,6 @@ Keep these untracked unless the user explicitly asks for a private-only change:
 - `fish/fish_variables`, `fish/completions/`, `raycast/extensions/`, `nvim/lazy-lock.json`
 - `claude/history.jsonl`, `claude/file-history/`, `claude/projects/`, `claude/telemetry/`, `claude/*cache*.json`
 - `pi-agent/auth.json`, `pi-agent/sessions/`, `pi-agent/mcp-oauth/`, `pi-agent/npm/`, `pi-agent/trust.json`
-- `agents/skills/**/.venv/`, `agents/skills/**/node_modules/`
 - Any `.env`, token, private key, OAuth file, local database, socket, log, or generated package cache.
 
 ## Common Commands
@@ -74,4 +73,4 @@ Before reporting done:
 - Treat vague requests as intake; clarify before broad rewrites.
 - Keep generated technical artifacts in English unless the user explicitly requests another language.
 - Prefer small slices that keep restore behavior demonstrable.
-- If changing Claude, Pi, or shared skills, preserve only portable config and update `.gitignore` when new runtime paths appear.
+- If changing Claude or Pi config, preserve only portable config and update `.gitignore` when new runtime paths appear.

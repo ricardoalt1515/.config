@@ -40,8 +40,6 @@ pi-agent/pi-pretty/**/*.mdb
 pi-agent/sessions/
 pi-agent/trust.json
 pi-agent/**/*.log
-agents/skills/**/.venv/
-agents/skills/**/node_modules/
 
 # Secrets and auth state
 # GitHub Copilot local app state contains oauth_token — never commit.
